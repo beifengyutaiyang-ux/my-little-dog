@@ -1,18 +1,20 @@
-# My Little Dog · Prototype 0.3
+# My Little Dog · Prototype 0.4
 
-Prototype 0.3 adds real frame-by-frame locomotion to the existing phone-friendly pet simulator.
+Prototype 0.4 upgrades the phone-friendly Beagle room simulator with **authentic extracted Beagle audio**, **audio-visual vocalization sync**, **unified state machine protection**, and **new living-room behaviors**.
 
-## New animation assets
-- `assets/dog/walk/frame-0.png` through `frame-3.png`: four-frame walk loop.
-- `assets/dog/run/frame-0.png` through `frame-3.png`: four-frame run loop.
-- `assets/dog/idle.png`, `bark.png`, `happy.png`, `sleep.png`, `sit.png`, `play.png`, `crouch.png`: separate transparent action poses.
-
-## Runtime
-- `requestAnimationFrame` advances walk/run frames continuously.
-- The dog moves horizontally and turns to face the direction of travel.
-- Static poses are used for idle, bark, sleep, sit, happy, play and crouch.
-- Existing interaction buttons, status meters and localStorage persistence remain.
-- Users may import their own audio recording using the sound button.
-
-## Honest limitations
-Walk and run are continuous four-frame loops. Bark is currently a dedicated static pose with a simple mouth overlay/body bob; it is not yet a multi-frame mouth-sync animation. Tail and ears are not yet independently rigged. No authentic Beagle recording is bundled.
+## What's new in 0.4
+- **Authentic Beagle audio (`assets/audio/`)**:
+  - `bark-1.mp3` – `bark-3.mp3`: crisp short adult Beagle barks.
+  - `baying-1.mp3` – `baying-4.mp3`: signature hound "wer-wer" baying/howls.
+  - `whining-1.mp3` – `whining-3.mp3`: soft puppy whining/whimpering clips.
+- **Audio Engine**:
+  - Web Audio API preloading & decoding with `GainNode` volume/mute control and `AnalyserNode` real-time amplitude tracking, plus `HTMLAudioElement` fallback.
+  - First-gesture audio unlock for Android Chrome / mobile WebView autoplay rules.
+  - Overlap prevention, mute toggle (`🔊`/`🔇`), volume slider, and preserved custom audio import (`♫`).
+- **Audio-Visual Sync & State Machine**:
+  - Real-time `--mouth-open` & `--voice-pulse` sync driving mouth opening/closing, head lift, body bobbing, and ear flutter during vocalizations, restoring `idle` when audio ends.
+  - Token-guarded timers prevent locomotion/action/audio conflicts.
+- **New Behaviors**:
+  - Sniffing (`sniff`), curious head-tilt (`headTilt`), stretching (`stretch`), chasing tennis ball (`chaseToy`), carrying mischievous items (`carryItem`), rug-digging zoomies (`mischief`), and autonomous living-room exploration.
+- **Backward Compatibility**:
+  - Preserves 4-frame `walk` & `run`, horizontal flip, all 5 action buttons, 4 status meters, and automatic migration from `mld-v03` `localStorage` saves.
