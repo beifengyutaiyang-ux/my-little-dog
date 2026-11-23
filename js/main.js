@@ -1,76 +1,19 @@
-(() => {
-const $ = id => document.getElementById(id);
-const sprite = $("dogSprite"), dog = $("dogHitbox"), shadow = $("dogShadow");
-const speech = $("speech"), subtitle = $("subtitle"), hint = $("behaviorHint");
-const audio = $("dogAudio"), audioInput = $("audioInput");
-const frames = {
-  idle:0, walk:1, run:2, play:3, bark:4, crouch:5, sit:6, happy:7, sleep:8
-};
-const messages = {
-  pet:["它舒服地眯起眼睛，尾巴摇个不停。","它把脑袋凑过来，想再摸摸！"],
-  feed:["它埋头吃起狗粮，还舔了舔嘴巴。","吃饱啦！它开心地看着你。"],
-  play:["它追着玩具跑了一圈，兴奋极了！","它摆出邀请玩耍的姿势！"],
-  rest:["它找了个舒服的位置，准备休息。","它打了个哈欠，慢慢放松下来。"],
-  call:["它竖起耳朵，摇着尾巴跑向你！","听到你叫它，它马上跑过来了！"]
-};
-let state = JSON.parse(localStorage.getItem("mld-v02") || '{"mood":82,"hunger":35,"energy":88,"bond":35}');
-let actionTimer, wanderTimer, currentMode="idle", x=50;
-function clamp(v){return Math.max(0,Math.min(100,v))}
-function render(){
-  const mood=state.mood,hunger=state.hunger,energy=state.energy,bond=state.bond;
-  $("moodText").textContent=mood>65?"开心":mood>35?"平静":"无聊";
-  $("hungerText").textContent=hunger<30?"饱腹":hunger<65?"适中":"饿了";
-  $("energyText").textContent=energy>65?"充沛":energy>30?"一般":"疲惫";
-  $("bondText").textContent=bond;
-  $("moodBar").style.width=mood+"%";$("hungerBar").style.width=hunger+"%";
-  $("energyBar").style.width=energy+"%";$("bondBar").style.width=bond+"%";
-  localStorage.setItem("mld-v02",JSON.stringify(state));
-}
-function pose(mode, duration=0){
-  currentMode=mode;
-  sprite.src=`assets/dog/pose-${frames[mode] ?? 0}.png`;
-  dog.className="dog-hitbox "+mode;
-  if(duration){clearTimeout(actionTimer);actionTimer=setTimeout(()=>pose("idle"),duration)}
-}
-function say(text, bubble=""){
-  subtitle.textContent=text;
-  if(bubble){speech.textContent=bubble;speech.classList.add("show");setTimeout(()=>speech.classList.remove("show"),1900)}
-}
-function moveTo(percent, mode="walk", duration=1400){
-  x=Math.max(25,Math.min(76,percent));
-  dog.style.left=x+"%";shadow.style.left=x+"%";
-  pose(mode,duration);
-}
-function bark(){
-  pose("bark",1200);say("它突然发现了什么，发出洪亮的猎犬叫声！","WOO-wer! 汪！");
-  if(audio.src){audio.currentTime=0;audio.play().catch(()=>{})}
-}
-function interact(type){
-  const list=messages[type];say(list[Math.floor(Math.random()*list.length)]);
-  if(type==="pet"){state.bond=clamp(state.bond+3);state.mood=clamp(state.mood+8);pose("happy",1300)}
-  if(type==="feed"){state.hunger=clamp(state.hunger-28);state.mood=clamp(state.mood+5);pose("happy",1500)}
-  if(type==="play"){state.energy=clamp(state.energy-14);state.mood=clamp(state.mood+12);state.bond=clamp(state.bond+2);moveTo(x>55?42:62,"run",1300)}
-  if(type==="rest"){state.energy=clamp(state.energy+18);pose("sleep",2200)}
-  if(type==="call"){state.bond=clamp(state.bond+2);moveTo(50,"run",1100)}
-  if(type==="pet")say(list[Math.floor(Math.random()*list.length)]);
-  render();
-}
-document.querySelectorAll("[data-action]").forEach(btn=>btn.addEventListener("click",()=>interact(btn.dataset.action)));
-$("dogHitbox").addEventListener("click",()=>interact("pet"));
-$("resetBtn").addEventListener("click",()=>{state={mood:82,hunger:35,energy:88,bond:35};render();pose("idle");say("状态已重置。")});
-$("soundBtn").addEventListener("click",()=>audioInput.click());
-audioInput.addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;audio.src=URL.createObjectURL(f);say("叫声音频已载入，点击呼唤或等待它叫起来。")});
-function wander(){
-  if(currentMode==="sleep")return;
-  const r=Math.random();
-  if(r<.24){pose("idle");hint.textContent="它停下来观察四周"}
-  else if(r<.48){moveTo(x+(Math.random()>.5?12:-12),"walk",1500);hint.textContent="它在客厅里慢慢踱步"}
-  else if(r<.65){pose("crouch",1400);hint.textContent="它闻到了有趣的气味"}
-  else if(r<.79){pose("play",1200);hint.textContent="它突然兴奋起来"}
-  else if(r<.9){bark();hint.textContent="它又开始大声叫了"}
-  else {pose("sit",1800);hint.textContent="它坐下来等你陪它"}
-}
-render();pose("idle");
-wanderTimer=setInterval(wander,5200);
-setInterval(()=>{state.hunger=clamp(state.hunger+1);state.energy=clamp(state.energy-0.5);if(state.hunger>70)state.mood=clamp(state.mood-1);render()},45000);
+(()=>{const $=id=>document.getElementById(id),dog=$("dogCharacter"),img=$("dogFrame"),shadow=$("dogShadow"),speech=$("speech"),subtitle=$("subtitle"),hint=$("behaviorHint"),audio=$("dogAudio"),audioInput=$("audioInput");
+const frames={walk:Array.from({length:4},(_,i)=>`assets/dog/walk/frame-${i}.png`),run:Array.from({length:4},(_,i)=>`assets/dog/run/frame-${i}.png`)};
+const state=JSON.parse(localStorage.getItem("mld-v03")||'{"mood":82,"hunger":35,"energy":88,"bond":35}');
+let mode="idle",frame=0,last=0,raf=0,x=50,moveTimer=null,autoTimer=null,actionTimer=null,frameMs=135,walkingUntil=0;
+function clamp(n){return Math.max(0,Math.min(100,n))}
+function render(){for(const [key,label,bar] of [["mood","moodText","moodBar"],["hunger","hungerText","hungerBar"],["energy","energyText","energyBar"]]){$(label).textContent=key==="mood"?(state[key]>65?"开心":state[key]>35?"平静":"无聊"):key==="hunger"?(state[key]<30?"饱腹":state[key]<65?"适中":"饿了"):(state[key]>65?"充沛":state[key]>30?"一般":"疲惫");$(bar).style.width=state[key]+"%"}$("bondText").textContent=state.bond;$("bondBar").style.width=state.bond+"%";localStorage.setItem("mld-v03",JSON.stringify(state))}
+function setMode(next,duration=0){mode=next;frame=0;last=0;dog.className="dog-character "+next+(dog.dataset.direction==="left"?" face-left":"");const staticPose={idle:"idle",bark:"bark",pet:"happy",happy:"happy",sleep:"sleep",sit:"sit",crouch:"crouch",play:"play"};const src=frames[next];if(src)img.src=src[0];else img.src=`assets/dog/${staticPose[next]||"idle"}.png`;if(duration){clearTimeout(actionTimer);actionTimer=setTimeout(()=>setMode("idle"),duration)}}
+function loop(t){if(t-last>=frameMs){last=t;if(mode==="walk"||mode==="run"){frame=(frame+1)%frames[mode].length;img.src=frames[mode][frame]}}raf=requestAnimationFrame(loop)}
+function moveTo(target,speed="walk"){const nextX=Math.max(24,Math.min(78,target));dog.dataset.direction=nextX<x?"left":"right";x=nextX;dog.style.left=x+"%";dog.style.transform=`translateX(-50%) scaleX(${dog.dataset.direction==="left"?-1:1})`;shadow.style.left=x+"%";setMode(speed);hint.textContent=speed==="run"?"它兴奋地跑起来了":"它正在客厅里走动";clearTimeout(moveTimer);moveTimer=setTimeout(()=>setMode("idle"),speed==="run"?1450:2200)}
+function say(text,bubble=""){subtitle.textContent=text;if(bubble){speech.textContent=bubble;speech.classList.add("show");setTimeout(()=>speech.classList.remove("show"),1800)}}
+function bark(){setMode("bark",1350);say("它抬起头，发出响亮的猎犬式叫声！","WOO-wer!");if(audio.src){audio.currentTime=0;audio.play().catch(()=>{})}}
+const replies={pet:"它舒服地靠近你，尾巴开心地摆动。",feed:"它埋头吃起狗粮，还满足地舔舔嘴。",play:"它兴奋地追着玩具跑了起来！",rest:"它打了个哈欠，趴下来休息。",call:"它竖起耳朵，飞快地跑向你！"};
+function act(a){say(replies[a]);if(a==="pet"){state.bond=clamp(state.bond+3);state.mood=clamp(state.mood+7);setMode("pet",1100)}if(a==="feed"){state.hunger=clamp(state.hunger-28);state.mood=clamp(state.mood+5);setMode("happy",1300)}if(a==="play"){state.energy=clamp(state.energy-12);state.mood=clamp(state.mood+12);state.bond=clamp(state.bond+2);moveTo(x>55?38:65,"run")}if(a==="rest"){state.energy=clamp(state.energy+18);setMode("sleep",3500)}if(a==="call"){state.bond=clamp(state.bond+2);moveTo(50,"run")}render()}
+document.querySelectorAll("[data-action]").forEach(b=>b.addEventListener("click",()=>act(b.dataset.action)));dog.addEventListener("click",()=>act("pet"));
+$("resetBtn").addEventListener("click",()=>{Object.assign(state,{mood:82,hunger:35,energy:88,bond:35});render();setMode("idle");say("状态已重置。")});
+$("soundBtn").addEventListener("click",()=>audioInput.click());audioInput.addEventListener("change",e=>{const f=e.target.files[0];if(f){audio.src=URL.createObjectURL(f);say("已载入你选择的叫声音频。")}});
+function wander(){if(["sleep","pet","happy","bark"].includes(mode))return;const r=Math.random();if(r<.24){setMode("idle");hint.textContent="它停下来观察四周"}else if(r<.58)moveTo(x+(Math.random()>.5?12:-12),"walk");else if(r<.78){setMode("idle");hint.textContent="它低头嗅闻地毯"}else if(r<.91){bark();hint.textContent="它突然兴奋地叫了起来"}else moveTo(x+(Math.random()>.5?18:-18),"run")}
+render();setMode("walk");raf=requestAnimationFrame(loop);setTimeout(()=>setMode("idle"),900);autoTimer=setInterval(wander,5200);setInterval(()=>{state.hunger=clamp(state.hunger+1);state.energy=clamp(state.energy-.4);if(state.hunger>70)state.mood=clamp(state.mood-1);render()},45000);
 })();
