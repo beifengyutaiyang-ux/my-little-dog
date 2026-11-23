@@ -247,7 +247,6 @@
     }
     isVocalizing = false;
     smoothedAmp = 0;
-    dog.style.setProperty("--mouth-open", "0");
     dog.style.setProperty("--voice-pulse", "0");
   }
 
@@ -365,8 +364,7 @@
       if (token !== actionToken) return;
       isVocalizing = false;
       smoothedAmp = 0;
-      dog.style.setProperty("--mouth-open", "0");
-      dog.style.setProperty("--voice-pulse", "0");
+        dog.style.setProperty("--voice-pulse", "0");
       clearTimeout(actionTimer);
       setMode("idle");
     };
@@ -449,7 +447,6 @@
       targetAmp = 0.35 + 0.55 * Math.abs(Math.sin(t)) * (0.65 + 0.35 * Math.sin(t * 0.37));
     }
     smoothedAmp = smoothedAmp * 0.55 + targetAmp * 0.45;
-    dog.style.setProperty("--mouth-open", smoothedAmp.toFixed(3));
     dog.style.setProperty("--voice-pulse", (smoothedAmp * 0.9).toFixed(3));
   }
 
