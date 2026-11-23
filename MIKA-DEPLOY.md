@@ -1,21 +1,20 @@
-# Mika deployment instructions — Prototype 0.2
+# Mika deployment instructions — Prototype 0.3
 
 Repository: `beifengyutaiyang-ux/my-little-dog`
 Branch: `main`
-Publish: GitHub Pages from `/ (root)`
+GitHub Pages source: `/ (root)`
 
-1. Open the repository and update the project using the files in this package.
-2. Upload the CONTENTS of this package to the repository root, not the containing folder.
-3. Replace `index.html`, `css/style.css`, `js/main.js`, and the `assets/` directory.
-4. Ensure these paths exist exactly:
-   - `index.html`
-   - `css/style.css`
-   - `js/main.js`
-   - `assets/environment/living-room.png`
-   - `assets/dog/pose-0.png` through `assets/dog/pose-8.png`
-5. Do not rewrite or redesign the code. Do not rename files or add another directory level.
-6. Commit with message: `Replace static dog with 2D sprite character prototype 0.2`.
-7. Wait for GitHub Pages deployment, then open:
-   `https://beifengyutaiyang-ux.github.io/my-little-dog/`
-8. Verify the dog is fully visible with transparent edges, the dog changes poses, can wander left/right, and all five action buttons work.
-9. Report any missing asset or console error verbatim. Do not claim the audio is bundled: the sound button imports an audio file selected by the user.
+1. Upload the CONTENTS of this package to the repository root, replacing `index.html`, `css/`, `js/`, and `assets/`.
+2. Do not create an extra enclosing directory. Do not rewrite the code.
+3. Confirm these animation files exist:
+   - `assets/dog/walk/frame-0.png` through `frame-3.png`
+   - `assets/dog/run/frame-0.png` through `frame-3.png`
+4. Confirm these action poses exist: `idle.png`, `bark.png`, `happy.png`, `sleep.png`, `sit.png`, `play.png`, `crouch.png`.
+5. Keep `assets/environment/living-room.png`.
+6. Commit message: `Add continuous beagle walk and run animation prototype 0.3`.
+7. Wait for Pages deployment. On mobile Chrome test:
+   - walk/run images visibly advance through frames
+   - dog moves and faces its travel direction
+   - tapping the dog and all five action buttons work
+   - state remains after refresh
+8. Report missing files or errors exactly. Do not claim authentic audio is bundled.

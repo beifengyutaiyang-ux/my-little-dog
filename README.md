@@ -1,16 +1,18 @@
-# My Little Dog · Prototype 0.2
+# My Little Dog · Prototype 0.3
 
-This version replaces the old framed dog photo with a transparent 2D pose set.
-The dog is rendered as an independent character over a separate living-room background.
+Prototype 0.3 adds real frame-by-frame locomotion to the existing phone-friendly pet simulator.
 
-## Files
-- `assets/dog/pose-0.png` to `pose-8.png`: nine transparent dog poses (idle, walk, run, play, bark, crouch, sit, happy, sleep).
-- `assets/environment/living-room.png`: separate room background.
-- `js/main.js`: pose switching, simple wandering, interactions, local save, optional user-supplied audio.
-- `css/style.css`: responsive mobile layout and motion effects.
+## New animation assets
+- `assets/dog/walk/frame-0.png` through `frame-3.png`: four-frame walk loop.
+- `assets/dog/run/frame-0.png` through `frame-3.png`: four-frame run loop.
+- `assets/dog/idle.png`, `bark.png`, `happy.png`, `sleep.png`, `sit.png`, `play.png`, `crouch.png`: separate transparent action poses.
 
-## Deploy
-Upload the contents of this folder to the existing GitHub repository root, replacing the old `index.html`, `css/`, `js/`, and `assets/` contents. Keep the repository root structure; do not upload the outer folder itself.
+## Runtime
+- `requestAnimationFrame` advances walk/run frames continuously.
+- The dog moves horizontally and turns to face the direction of travel.
+- Static poses are used for idle, bark, sleep, sit, happy, play and crouch.
+- Existing interaction buttons, status meters and localStorage persistence remain.
+- Users may import their own audio recording using the sound button.
 
-## Important limitations
-This is a first 2D sprite-pose prototype, not yet a full frame-by-frame skeletal animation system. It switches between nine separately illustrated transparent poses and adds motion to the character container. Real Beagle recordings are not bundled; the user can import their own audio from the sound button.
+## Honest limitations
+Walk and run are continuous four-frame loops. Bark is currently a dedicated static pose with a simple mouth overlay/body bob; it is not yet a multi-frame mouth-sync animation. Tail and ears are not yet independently rigged. No authentic Beagle recording is bundled.

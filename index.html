@@ -1,55 +1,31 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5e8d8">
-<title>My Little Dog · Beagle Room</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5e8d8"><title>My Little Dog · Prototype 0.3</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <main class="app">
-  <header class="topbar">
-    <div class="brand"><span>🐾</span><strong>My Little Dog</strong><small>BEAGLE ROOM</small></div>
-    <div class="top-actions">
-      <button class="round" id="soundBtn" aria-label="声音设置">♫</button>
-      <button class="round" id="resetBtn" aria-label="重置">↻</button>
-    </div>
-  </header>
-
-  <section class="game" aria-label="比格犬互动客厅">
-    <div class="room-bg"></div>
-    <div class="room-vignette"></div>
-
-    <aside class="status panel">
-      <div class="status-title"><b>我的比格犬</b><span>青少年 · 三色</span></div>
-      <div class="meter"><label>心情 <b id="moodText">开心</b></label><div class="track"><i id="moodBar" style="width:82%"></i></div></div>
-      <div class="meter"><label>饥饿 <b id="hungerText">适中</b></label><div class="track orange"><i id="hungerBar" style="width:35%"></i></div></div>
-      <div class="meter"><label>精力 <b id="energyText">充沛</b></label><div class="track blue"><i id="energyBar" style="width:88%"></i></div></div>
-      <div class="meter"><label>亲密度 <b id="bondText">35</b></label><div class="track pink"><i id="bondBar" style="width:35%"></i></div></div>
-    </aside>
-
-    <div class="room-label">客厅 · 在家时间</div>
-    <div class="dog-shadow" id="dogShadow"></div>
-    <button class="dog-hitbox" id="dogHitbox" aria-label="摸摸比格犬">
-      <img id="dogSprite" src="assets/dog/pose-0.png" alt="一只完整的三色比格犬">
-    </button>
-    <div class="speech" id="speech">汪！</div>
-    <div class="subtitle" id="subtitle">它正在好奇地观察客厅……</div>
-
-    <div class="scene-hint"><span class="dot"></span><span id="behaviorHint">小家伙正在闻闻地毯</span></div>
-    <nav class="actions" aria-label="互动操作">
-      <button data-action="pet"><span>🖐</span><b>抚摸</b></button>
-      <button data-action="feed"><span>🦴</span><b>喂食</b></button>
-      <button data-action="play"><span>🎾</span><b>玩耍</b></button>
-      <button data-action="rest"><span>🛏</span><b>休息</b></button>
-      <button data-action="call"><span>📣</span><b>呼唤</b></button>
-    </nav>
-  </section>
-  <footer class="footer"><span>Prototype 0.2 · 2D Sprite Character</span><span id="saveStatus">自动保存已开启</span></footer>
-  <input type="file" id="audioInput" accept="audio/*" hidden>
-  <audio id="dogAudio" preload="none"></audio>
-</main>
-<script src="js/main.js"></script>
-</body>
-</html>
+<header class="topbar"><div class="brand"><span>🐾</span><strong>My Little Dog</strong><small>BEAGLE ROOM · 0.3</small></div>
+<div class="top-actions"><button class="round" id="soundBtn" aria-label="导入叫声音频">♫</button><button class="round" id="resetBtn" aria-label="重置状态">↻</button></div></header>
+<section class="game" aria-label="比格犬互动客厅">
+<div class="room-bg"></div><div class="room-vignette"></div>
+<aside class="status panel"><div class="status-title"><b>我的比格犬</b><span>青少年 · 三色</span></div>
+<div class="meter"><label>心情 <b id="moodText">开心</b></label><div class="track"><i id="moodBar"></i></div></div>
+<div class="meter"><label>饥饿 <b id="hungerText">适中</b></label><div class="track orange"><i id="hungerBar"></i></div></div>
+<div class="meter"><label>精力 <b id="energyText">充沛</b></label><div class="track blue"><i id="energyBar"></i></div></div>
+<div class="meter"><label>亲密度 <b id="bondText">35</b></label><div class="track pink"><i id="bondBar"></i></div></div></aside>
+<div class="room-label">客厅 · 自由活动</div>
+<div class="dog-shadow" id="dogShadow"></div>
+<div class="dog-character" id="dogCharacter" role="img" aria-label="正在活动的三色比格犬">
+<img id="dogFrame" src="assets/dog/walk/frame-0.png" alt="">
+<div class="bark-mouth" id="barkMouth"></div>
+</div>
+<div class="speech" id="speech"></div><div class="subtitle" id="subtitle">它正在好奇地观察客厅……</div>
+<div class="scene-hint"><span class="dot"></span><span id="behaviorHint">它正在客厅里活动</span></div>
+<nav class="actions" aria-label="互动操作">
+<button data-action="pet"><span>🖐</span><b>抚摸</b></button><button data-action="feed"><span>🦴</span><b>喂食</b></button><button data-action="play"><span>🎾</span><b>玩耍</b></button><button data-action="rest"><span>🛏</span><b>休息</b></button><button data-action="call"><span>📣</span><b>呼唤</b></button></nav>
+</section><footer class="footer"><span>Prototype 0.3 · Frame Animation</span><span id="saveStatus">自动保存已开启</span></footer>
+<input type="file" id="audioInput" accept="audio/*" hidden><audio id="dogAudio" preload="none"></audio>
+</main><script src="js/main.js"></script></body></html>
