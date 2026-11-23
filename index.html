@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5e6d2"><title>My Little Dog</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar"><div class="brand"><span class="paw">🐾</span><span>My Little Dog</span></div><div class="top-actions"><button class="icon-btn" id="soundSetup" title="导入真实叫声">🔊<small>声音</small></button><button class="icon-btn" id="resetBtn" title="重置状态">↻<small>重置</small></button></div></header>
+    <section class="game" aria-label="比格犬互动场景">
+      <div class="room"></div><div class="room-shade"></div>
+      <aside class="status card"><div class="status-head"><div><b>我的比格犬</b><small>青少年 · 三色比格</small></div><span class="level">LV.1</span></div>
+        <div class="meter"><label>😊 心情 <strong id="moodText">开心</strong></label><div class="track"><i id="moodBar" class="green" style="width:82%"></i></div></div>
+        <div class="meter"><label>🍖 饥饿 <strong id="hungerText">适中</strong></label><div class="track"><i id="hungerBar" class="orange" style="width:35%"></i></div></div>
+        <div class="meter"><label>⚡ 精力 <strong id="energyText">充沛</strong></label><div class="track"><i id="energyBar" class="blue" style="width:88%"></i></div></div>
+        <div class="meter"><label>❤️ 亲密度 <strong id="bondText">35</strong></label><div class="track"><i id="bondBar" class="pink" style="width:35%"></i></div></div>
+      </aside>
+      <div class="dog-frame" id="dogFrame"><img src="assets/beagle.png" alt="一只正在吠叫的三色比格犬" class="dog-photo" id="dogPhoto"><div class="thought" id="thought">汪！汪！</div><div class="caption" id="caption">你回来啦？快陪我玩！</div></div>
+      <div class="floor-toys"><span>🧸</span><span>🟠</span><span>🦴</span></div>
+      <div class="action-bar">
+        <button class="action" data-action="pet"><span>🖐️</span>抚摸</button><button class="action" data-action="feed"><span>🦴</span>喂食</button><button class="action" data-action="play"><span>🎾</span>玩耍</button><button class="action" data-action="rest"><span>🛏️</span>休息</button><button class="action" data-action="call"><span>📣</span>呼唤</button>
+      </div>
+      <div class="toast" id="toast" role="status">小家伙正在观察周围……</div>
+    </section>
+    <footer class="footer"><span>原型 0.1 · 互动与状态系统</span><span id="saveState">自动保存已开启</span></footer>
+    <input type="file" id="audioInput" accept="audio/*" hidden>
+    <audio id="dogAudio" preload="none"></audio>
+  </main>
+  <script src="js/main.js"></script>
+</body></html>
